@@ -1,106 +1,198 @@
 <template>
-  <div class="container">
-    <h1>Spotify Recently Played README Generator</h1>
-    <button @click="authorizeSpotify" v-if="!isAuthenticated">
-      Authorize with Spotify
-    </button>
-
-    <div v-if="isAuthenticated">
-      <h2>Your Markdown Code Snippet</h2>
-      <pre>{{ markdownSnippet }}</pre>
-      <button @click="copyToClipboard">Copy to Clipboard</button>
+  <div class="recent-tracks-container">
+    <div class="header">
+      <h1 class="title">Recently Played Tracks</h1>
+      <p class="description">Your recently played tracks on Spotify.</p>
     </div>
+
+    <div v-if="isLoading" class="loading-container">
+      <div class="loading-spinner"></div>
+      <p>Loading your tracks...</p>
+    </div>
+
+    <ul v-else-if="tracks?.items.length" class="tracks-list">
+      <li v-for="(item, index) in tracks.items" :key="index" class="track-item">
+        <img
+          :src="item.track.album.images[0]?.url"
+          :alt="item.track.name"
+          class="album-art"
+        />
+        <div class="track-info">
+          <p class="track-name">{{ item.track.name }}</p>
+          <p class="artist-name">
+            {{ item.track.artists[0]?.name || 'Unknown Artist' }}
+          </p>
+          <p class="played-at">
+            Played on {{ formatDate(item.played_at) }}
+          </p>
+        </div>
+      </li>
+    </ul>
+
+    <p v-else class="no-tracks">No tracks found.</p>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent } from 'vue';
+import { SpotifyService } from '../services/SpotifyService';
+
+interface Track {
+  track: {
+    name: string;
+    artists: Array<{ name: string }>;
+    album: {
+      images: Array<{ url: string }>;
+    };
+  };
+  played_at: string;
+}
+
+interface RecentlyPlayedResponse {
+  items: Track[];
+}
 
 export default defineComponent({
-  name: 'ReadmeGenerator',
-  setup() {
-    const isAuthenticated = ref(false);
-    const markdownSnippet = ref('');
-    const userId = ref('');
-
-    const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
-    const redirectUri = 'https://spotify-recent-tracks.vercel.app/callback';
-
-    const authorizeSpotify = () => {
-      const scope = 'user-read-recently-played';
-      const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(
-        redirectUri
-      )}&scope=${scope}`;
-      window.location.href = authUrl;
-    };
-
-    const handleCallback = async (code: string) => {
-      try {
-        const response = await fetch('/api/auth/token', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ code }),
-        });
-        const data = await response.json();
-        userId.value = data.user_id;
-
-        markdownSnippet.value = `![Alt text](https://your-domain.com/api?user=${userId.value})`;
-        isAuthenticated.value = true;
-      } catch (error) {
-        console.error('Error handling callback:', error);
-      }
-    };
-
-    const copyToClipboard = () => {
-      navigator.clipboard.writeText(markdownSnippet.value);
-      alert('Markdown code copied to clipboard!');
-    };
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
-    if (code) {
-      handleCallback(code);
-    }
-
+  name: 'RecentTracks',
+  data() {
     return {
-      isAuthenticated,
-      markdownSnippet,
-      authorizeSpotify,
-      copyToClipboard,
+      tracks: null as RecentlyPlayedResponse | null,
+      isLoading: true,
     };
+  },
+  methods: {
+    formatDate(dateString: string): string {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+    },
+  },
+  async mounted() {
+    try {
+      const response = await SpotifyService.getRecentlyPlayed();
+      if (response) {
+        this.tracks = response;
+      } else {
+        console.error('No data returned from SpotifyService.');
+      }
+    } catch (error) {
+      console.error('Error fetching recent tracks:', error);
+    } finally {
+      this.isLoading = false;
+    }
   },
 });
 </script>
 
-<style>
-.container {
+<style scoped>
+.recent-tracks-container {
   max-width: 800px;
   margin: 0 auto;
   padding: 2rem;
-  text-align: center;
-  font-family: Arial, sans-serif;
-}
-
-pre {
-  background-color: #f4f4f4;
-  padding: 1rem;
-  border-radius: 8px;
-  text-align: left;
-}
-
-button {
-  padding: 0.5rem 1rem;
-  background-color: #1db954;
+  font-family: 'Circular Std', Arial, sans-serif;
   color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1rem;
+  background-color: #191414;
 }
 
-button:hover {
-  background-color: #1ed760;
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.description {
+  font-size: 1rem;
+  color: #b3b3b3;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.loading-spinner {
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid #1db954;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.tracks-list {
+  list-style: none;
+  padding: 0;
+}
+
+.track-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: #282828;
+  border-radius: 8px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.track-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.album-art {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  margin-right: 1rem;
+}
+
+.track-info {
+  flex: 1;
+}
+
+.track-name {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+}
+
+.artist-name {
+  font-size: 1rem;
+  color: #b3b3b3;
+  margin-bottom: 0.25rem;
+}
+
+.played-at {
+  font-size: 0.875rem;
+  color: #b3b3b3;
+}
+
+.no-tracks {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #b3b3b3;
+  margin-top: 2rem;
 }
 </style>
