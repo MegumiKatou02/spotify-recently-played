@@ -29,7 +29,7 @@
       <p>
         View source code on
         <a
-          href="https://github.com/your-username/your-repo"
+          href="https://github.com/MegumiKatou02/spotify-recently-played"
           target="_blank"
           rel="noopener noreferrer"
           class="github-link"
