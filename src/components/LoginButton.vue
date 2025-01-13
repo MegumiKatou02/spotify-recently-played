@@ -1,16 +1,49 @@
 <template>
-  <button
-    @click="authorizeSpotify"
-    :disabled="isLoading"
-    class="spotify-login-button"
-  >
-    <img
-      src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg"
-      alt="Spotify Logo"
-      class="spotify-logo"
-    />
-    <span>{{ isLoading ? 'Redirecting...' : 'Authorize with Spotify' }}</span>
-  </button>
+  <div class="login-container">
+    <div class="header">
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg"
+        alt="Spotify Logo"
+        class="header-logo"
+      />
+      <h1 class="title">Spotify Recently Played</h1>
+      <p class="description">
+        Connect with Spotify to view your recently played tracks.
+      </p>
+    </div>
+
+    <button
+      @click="authorizeSpotify"
+      :disabled="isLoading"
+      class="spotify-login-button"
+    >
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg"
+        alt="Spotify Logo"
+        class="spotify-logo"
+      />
+      <span>{{ isLoading ? 'Redirecting...' : 'Authorize with Spotify' }}</span>
+    </button>
+
+    <div class="footer">
+      <p>
+        View source code on
+        <a
+          href="https://github.com/your-username/your-repo"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="github-link"
+        >
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg"
+            alt="GitHub Logo"
+            class="github-logo"
+          />
+          GitHub
+        </a>
+      </p>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -40,6 +73,40 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #191414;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+.header {
+  margin-bottom: 32px;
+}
+
+.header-logo {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 16px;
+  filter: brightness(0) invert(1);
+}
+
+.title {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.description {
+  font-size: 16px;
+  color: #b3b3b3;
+}
+
 .spotify-login-button {
   display: inline-flex;
   align-items: center;
@@ -70,6 +137,30 @@ export default defineComponent({
   width: 24px;
   height: 24px;
   margin-right: 12px;
+  filter: brightness(0) invert(1);
+}
+
+.footer {
+  margin-top: 60px;
+  color: #b3b3b3;
+}
+
+.github-link {
+  display: inline-flex;
+  align-items: center;
+  color: #1db954;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.github-link:hover {
+  color: #1ed760;
+}
+
+.github-logo {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
   filter: brightness(0) invert(1);
 }
 </style>
