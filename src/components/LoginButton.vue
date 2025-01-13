@@ -15,7 +15,7 @@ export default defineComponent({
     const authorizeSpotify = () => {
       isLoading.value = true;
       const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
-      const redirectUri = 'http://localhost:5173/callback';
+      const redirectUri = 'https://spotify-recent-tracks.vercel.app/callback';
       const scope = 'user-read-recently-played';
       const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scope}`;
 
