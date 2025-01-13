@@ -1,6 +1,15 @@
 <template>
-  <button @click="authorizeSpotify" :disabled="isLoading">
-    {{ isLoading ? 'Redirecting...' : 'Authorize with Spotify' }}
+  <button
+    @click="authorizeSpotify"
+    :disabled="isLoading"
+    class="spotify-login-button"
+  >
+    <img
+      src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg"
+      alt="Spotify Logo"
+      class="spotify-logo"
+    />
+    <span>{{ isLoading ? 'Redirecting...' : 'Authorize with Spotify' }}</span>
   </button>
 </template>
 
@@ -29,3 +38,38 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+.spotify-login-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  background-color: #1db954;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.spotify-login-button:hover {
+  background-color: #1ed760;
+  transform: scale(1.05);
+}
+
+.spotify-login-button:disabled {
+  background-color: #b3b3b3;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.spotify-logo {
+  width: 24px;
+  height: 24px;
+  margin-right: 12px;
+  filter: brightness(0) invert(1);
+}
+</style>
