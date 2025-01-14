@@ -35,11 +35,24 @@
     </ul>
 
     <p v-else class="no-tracks">No tracks found.</p>
+    <button
+      v-if="!isLoading"
+      @click="authorizeSpotify"
+      :disabled="isLoading"
+      class="spotify-login-button"
+    >
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg"
+        alt="Spotify Logo"
+        class="spotify-logo"
+      />
+      <span>{{ isLoading_reauth ? 'Redirecting...' : 'Re-Authorize' }}</span>
+    </button>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { SpotifyService } from '../services/SpotifyService';
 
 interface Track {
@@ -82,6 +95,24 @@ export default defineComponent({
     openTrack(url: string) {
       window.open(url, '_blank');
     },
+  },
+  setup() {
+    const isLoading_reauth = ref(false);
+
+    const authorizeSpotify = () => {
+      isLoading_reauth.value = true;
+      const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
+      const redirectUri = import.meta.env.VITE_SPOTIFY_REDIRECT_URI
+      const scope = 'user-read-recently-played';
+      const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scope}&show_dialog=true`;
+
+      window.location.href = authUrl;
+    };
+
+    return {
+      authorizeSpotify,
+      isLoading_reauth,
+    };
   },
   async mounted() {
     try {
