@@ -35,7 +35,7 @@ export default defineComponent({
         .then(response => {
           const accessToken = response.data.access_token;
           localStorage.setItem('spotifyAccessToken', accessToken);
-          router.push('/recent');
+          router.push('/recently');
         })
         .catch(error => {
           console.error('Error obtaining access token:', error);

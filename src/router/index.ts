@@ -18,7 +18,7 @@ const routes: Array<RouteRecordRaw> = [
     component: Callback,
   },
   {
-    path: '/recent',
+    path: '/recently',
     name: 'RecentTracks',
     component: RecentTracks,
   },
