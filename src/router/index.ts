@@ -5,6 +5,7 @@ import Callback from '../views/Callback.vue';
 import RecentTracks from '../views/RecentTracks.vue';
 import ErrorPage from '../views/ErrorPage.vue';
 import RecentlyPlayed from '@/components/RecentlyPlayed.vue';
+import HelpPage from '@/views/HelpPage.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -31,6 +32,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/api',
     name: 'RecentlyPlayed',
     component: RecentlyPlayed,
+  },
+  {
+    path: "/generate",
+    name: "HelpPage",
+    component: HelpPage,
   },
   {
     path: '/:catchAll(.*)',

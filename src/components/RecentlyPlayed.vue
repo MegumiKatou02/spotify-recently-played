@@ -21,6 +21,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
 import { useRoute } from "vue-router";
+import * as constants from "@/utils/Constants"
 import { SpotifyService } from "@/services/SpotifyService";
 import type { TrackItem } from "@/types/SpotifyTypes";
 
@@ -36,9 +37,13 @@ const route = useRoute();
 
 const queryParams = computed(() => ({
   user: route.query.user as string | undefined,
-  width: route.query.width ? Number(route.query.width) : 490,
+  width: route.query.width ?
+  (Number(route.query.width) > constants.maxWidth || Number(route.query.width) < constants.minWidth ? constants.defaultWidth : Number(route.query.width)) :
+  constants.defaultWidth,
   unique: route.query.unique === "true",
-  count: route.query.count ? Number(route.query.count) : 7,
+  count: route.query.count ?
+  (Number(route.query.count) > constants.maxCount || Number(route.query.count) < constants.minCount ? constants.defaultCount :
+    Number(route.query.count)) : constants.defaultCount,
 }));
 
 const tracks = ref<TrackDisplay[]>([]);;
