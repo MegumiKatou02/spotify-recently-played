@@ -6,7 +6,7 @@ Display your recently played Spotify tracks on your GitHub profile README. Power
 
 Click the button below to connect your Spotify account with the Vercel app. This is needed to access your recently played tracks.
 
-> [!WARNING]
+> [!NOTE]
 > By authorizing the app, you agree to have your Spotify username, access token, and refresh token stored on a secure database. This is required so you only need to authorize once and the app can automatically refresh access tokens in order to retrieve recent tracks.
 >
 > You can revoke the app at [Spotify Apps](https://www.spotify.com/account/apps).
