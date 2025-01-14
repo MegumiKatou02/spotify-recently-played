@@ -4,6 +4,7 @@ import LoginButton from '../components/LoginButton.vue';
 import Callback from '../views/Callback.vue';
 import RecentTracks from '../views/RecentTracks.vue';
 import ErrorPage from '../views/ErrorPage.vue';
+import RecentlyPlayed from '@/components/RecentlyPlayed.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -25,6 +26,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/error',
     name: 'Error',
     component: ErrorPage,
+  },
+  {
+    path: '/api',
+    name: 'RecentlyPlayed',
+    component: RecentlyPlayed,
   },
   {
     path: '/:catchAll(.*)',

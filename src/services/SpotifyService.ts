@@ -21,4 +21,22 @@ export class SpotifyService {
       throw error;
     }
   }
+  static async getUserId() {
+    const accessToken = localStorage.getItem("spotifyAccessToken");
+    if (!accessToken) {
+      throw new Error("No access token found.");
+    }
+
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+
+    try {
+      const response = await axios.get(`${spotifyApiBase}/me`, { headers });
+      return response.data.id;
+    } catch (error) {
+      console.error("Error fetching user ID:", error);
+      throw error;
+    }
+  }
 }
