@@ -40,7 +40,7 @@
         v-if="!isLoading"
         @click="authorizeSpotify"
         :disabled="isLoading"
-        class="spotify-navigator-button"
+        class="spotify-navigator-button spotify-navigator-button__reauthorize"
       >
         <img
           src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg"
@@ -49,13 +49,22 @@
         />
         <span>{{ isLoading_reauth ? 'Redirecting...' : 'Re-Authorize' }}</span>
       </button>
+      <router-link to="/generate">
+        <button
+          v-if="!isLoading"
+          :disabled="isLoading"
+          class="spotify-navigator-button spotify-navigator-button__generate"
+          >
+          <span>{{ isLoading_generate ? 'Redirecting...' : 'Generate Readme' }}</span>
+        </button>
+      </router-link>
       <router-link to="/">
         <button
           v-if="!isLoading"
           :disabled="isLoading"
-          class="spotify-navigator-button"
+          class="spotify-navigator-button spotify-navigator-button__home"
           >
-          <span>{{ isLoading_reauth ? 'Redirecting...' : 'Back to Home' }}</span>
+          <span>{{ isLoading_home ? 'Redirecting...' : 'Back to Home' }}</span>
         </button>
       </router-link>
     </div>
@@ -109,6 +118,8 @@ export default defineComponent({
   },
   setup() {
     const isLoading_reauth = ref(false);
+    const isLoading_generate = ref(false);
+    const isLoading_home = ref(false);
 
     const authorizeSpotify = () => {
       isLoading_reauth.value = true;
@@ -123,6 +134,8 @@ export default defineComponent({
     return {
       authorizeSpotify,
       isLoading_reauth,
+      isLoading_generate,
+      isLoading_home,
     };
   },
   async mounted() {
@@ -274,7 +287,6 @@ export default defineComponent({
 }
 
 .spotify-navigator-button:hover {
-  background-color: #1ed760;
   transform: scale(1.05);
 }
 
@@ -290,4 +302,29 @@ export default defineComponent({
   margin-right: 12px;
   filter: brightness(0) invert(1);
 }
+
+.spotify-navigator-button__reauthorize {
+background-color: #1ed760;
+}
+
+.spotify-navigator-button__reauthorize:hover {
+background-color: #45A049;
+}
+
+.spotify-navigator-button__generate {
+  background-color: #2196F3;
+}
+
+.spotify-navigator-button__generate:hover {
+background-color: #1E88E5;
+}
+
+.spotify-navigator-button__home {
+  background-color: #9E9E9E;
+}
+
+.spotify-navigator-button__home:hover {
+  background-color: #757575;
+}
+
 </style>
