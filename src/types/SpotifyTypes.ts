@@ -11,6 +11,7 @@ export interface Track {
   name: string;
   artists: Artist[];
   album: Album;
+  external_urls: ExternalUrls
 }
 
 export interface Artist {
@@ -19,4 +20,8 @@ export interface Artist {
 
 export interface Album {
   images: { url: string }[];
+}
+
+export interface ExternalUrls {
+  spotify: string;
 }
