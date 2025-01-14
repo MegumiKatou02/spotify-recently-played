@@ -21,7 +21,8 @@ export default defineComponent({
     if (code) {
       const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
       const clientSecret = import.meta.env.VITE_SPOTIFY_CLIENT_SECRET;
-      const redirectUri = 'https://spotify-recent-tracks.vercel.app/callback';
+      const redirectUri = 'http://localhost:5173/callback'
+      // const redirectUri = 'https://spotify-recent-tracks.vercel.app/callback';
       const tokenEndpoint = 'https://accounts.spotify.com/api/token';
 
       const formData = new URLSearchParams();
