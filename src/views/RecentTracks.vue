@@ -35,19 +35,30 @@
     </ul>
 
     <p v-else class="no-tracks">No tracks found.</p>
-    <button
-      v-if="!isLoading"
-      @click="authorizeSpotify"
-      :disabled="isLoading"
-      class="spotify-login-button"
-    >
-      <img
-        src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg"
-        alt="Spotify Logo"
-        class="spotify-logo"
-      />
-      <span>{{ isLoading_reauth ? 'Redirecting...' : 'Re-Authorize' }}</span>
-    </button>
+    <div class="button-footer">
+      <button
+        v-if="!isLoading"
+        @click="authorizeSpotify"
+        :disabled="isLoading"
+        class="spotify-navigator-button"
+      >
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg"
+          alt="Spotify Logo"
+          class="spotify-logo"
+        />
+        <span>{{ isLoading_reauth ? 'Redirecting...' : 'Re-Authorize' }}</span>
+      </button>
+      <router-link to="/">
+        <button
+          v-if="!isLoading"
+          :disabled="isLoading"
+          class="spotify-navigator-button"
+          >
+          <span>{{ isLoading_reauth ? 'Redirecting...' : 'Back to Home' }}</span>
+        </button>
+      </router-link>
+    </div>
   </div>
 </template>
 
@@ -132,6 +143,13 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.button-footer {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
 .recent-tracks-container {
   max-width: 800px;
   margin: 0 auto;
@@ -237,5 +255,39 @@ export default defineComponent({
   font-size: 1.2rem;
   color: #b3b3b3;
   margin-top: 2rem;
+}
+
+.spotify-navigator-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  height: 50px;
+  background-color: #1db954;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.spotify-navigator-button:hover {
+  background-color: #1ed760;
+  transform: scale(1.05);
+}
+
+.spotify-navigator-button:disabled {
+  background-color: #b3b3b3;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.spotify-logo {
+  width: 24px;
+  height: 24px;
+  margin-right: 12px;
+  filter: brightness(0) invert(1);
 }
 </style>
