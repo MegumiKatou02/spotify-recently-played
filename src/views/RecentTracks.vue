@@ -5,36 +5,6 @@
       <p class="description">Your recently played tracks on Spotify.</p>
     </div>
 
-    <div v-if="isLoading" class="loading-container">
-      <div class="loading-spinner"></div>
-      <p>Loading your tracks...</p>
-    </div>
-
-    <ul v-else-if="tracks?.items.length" class="tracks-list">
-      <li
-        v-for="(item, index) in tracks.items"
-        :key="index"
-        class="track-item"
-        @click="openTrack(item.track.external_urls.spotify)"
-      >
-        <img
-          :src="item.track.album.images[0]?.url"
-          :alt="item.track.name"
-          class="album-art"
-        />
-        <div class="track-info">
-          <p class="track-name">{{ item.track.name }}</p>
-          <p class="artist-name">
-            {{ item.track.artists[0]?.name || 'Unknown Artist' }}
-          </p>
-          <p class="played-at">
-            Played on {{ formatDate(item.played_at) }}
-          </p>
-        </div>
-      </li>
-    </ul>
-
-    <p v-else class="no-tracks">No tracks found.</p>
     <div class="button-footer">
       <button
         v-if="!isLoading"
@@ -49,24 +19,70 @@
         />
         <span>{{ isLoading_reauth ? 'Redirecting...' : 'Re-Authorize' }}</span>
       </button>
+
       <router-link to="/generate">
         <button
           v-if="!isLoading"
           :disabled="isLoading"
           class="spotify-navigator-button spotify-navigator-button__generate"
-          >
+        >
           <span>{{ isLoading_generate ? 'Redirecting...' : 'Generate Readme' }}</span>
         </button>
       </router-link>
+
       <router-link to="/">
         <button
           v-if="!isLoading"
           :disabled="isLoading"
           class="spotify-navigator-button spotify-navigator-button__home"
-          >
+        >
           <span>{{ isLoading_home ? 'Redirecting...' : 'Back to Home' }}</span>
         </button>
       </router-link>
+    </div>
+
+    <div v-if="isLoading" class="loading-container">
+      <div class="loading-spinner"></div>
+      <p>Loading your tracks...</p>
+    </div>
+
+    <ul v-else-if="tracks?.items.length" class="tracks-list">
+      <transition-group name="fade">
+        <li
+          v-for="(item, index) in (showAll ? tracks.items : tracks.items.slice(0, 5))"
+          :key="index"
+          class="track-item"
+          @click="openTrack(item.track.external_urls.spotify)"
+        >
+          <img
+            :src="item.track.album.images[0]?.url"
+            :alt="item.track.name"
+            class="album-art"
+          />
+          <div class="track-info">
+            <p class="track-name">{{ item.track.name }}</p>
+            <p class="artist-name">
+              {{ item.track.artists[0]?.name || 'Unknown Artist' }}
+            </p>
+            <p class="played-at">
+              Played on {{ formatDate(item.played_at) }}
+            </p>
+          </div>
+        </li>
+      </transition-group>
+    </ul>
+
+    <p v-else class="no-tracks">No tracks found.</p>
+
+    <div class="button-container">
+    <button
+      v-if="tracks?.items.length !== undefined && tracks?.items.length > 5"
+      class="toggle-button"
+      @click="showAll = !showAll"
+    >
+      <span>{{ showAll ? "show less" : "show more" }}</span>
+      <span class="arrow" :class="{ expanded: showAll }">▼</span>
+    </button>
     </div>
   </div>
 </template>
@@ -99,6 +115,7 @@ export default defineComponent({
     return {
       tracks: null as RecentlyPlayedResponse | null,
       isLoading: true,
+      showAll: false,
     };
   },
   methods: {
@@ -158,9 +175,12 @@ export default defineComponent({
 <style scoped>
 .button-footer {
   display: flex;
-  align-items: center;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  margin-bottom: 23px;
 }
 
 .recent-tracks-container {
@@ -325,6 +345,55 @@ background-color: #1E88E5;
 
 .spotify-navigator-button__home:hover {
   background-color: #757575;
+}
+
+.toggle-button {
+  background-color: #1db954;
+  color: white;
+  font-size: 16px;
+  padding: 10px 10px;
+  /* margin-top: 10px 10px; */
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content  : center;
+  gap: 8px;
+  /* display: block;
+  margin: 10px auto; */
+}
+
+.toggle-button:hover {
+  background-color: #17a74b;
+  transform: scale(1.05);
+}
+
+.arrow {
+  transition: transform 0.3s ease;
+}
+
+.arrow.expanded {
+  transform: rotate(180deg);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s, transform 0.5s;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
 </style>

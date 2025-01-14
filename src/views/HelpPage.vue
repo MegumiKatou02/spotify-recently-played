@@ -27,8 +27,8 @@ import { ref } from "vue";
 
 const links = ref([
   { name: "Markdown code snippet", url: "https://spotify-recently-tracks.vercel.app/api?user={user_id}" },
-  { name: "For custom count (1 ≤ {count} ≤ 10)", url: "https://spotify-recently-tracks.vercel.app/api?count={count}" },
-  { name: "For custom width (300 ≤ {width} ≤ 1000)", url: "https://spotify-recently-tracks.vercel.app/api?width={width}" },
+  { name: "For custom count (1 ≤ {count} ≤ 15)", url: "https://spotify-recently-tracks.vercel.app/api?count={count}" },
+  { name: "For custom width (490 ≤ {width} ≤ 1000)", url: "https://spotify-recently-tracks.vercel.app/api?width={width}" },
   { name: "For unique tracks", url: "https://spotify-recently-tracks.vercel.app/api?unique={true|false}" }
 ]);
 
