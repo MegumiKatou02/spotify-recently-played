@@ -11,7 +11,12 @@
     </div>
 
     <ul v-else-if="tracks?.items.length" class="tracks-list">
-      <li v-for="(item, index) in tracks.items" :key="index" class="track-item">
+      <li
+        v-for="(item, index) in tracks.items"
+        :key="index"
+        class="track-item"
+        @click="openTrack(item.track.external_urls.spotify)"
+      >
         <img
           :src="item.track.album.images[0]?.url"
           :alt="item.track.name"
@@ -44,6 +49,9 @@ interface Track {
     album: {
       images: Array<{ url: string }>;
     };
+    external_urls: {
+      spotify: string;
+    };
   };
   played_at: string;
 }
@@ -70,6 +78,9 @@ export default defineComponent({
         hour: '2-digit',
         minute: '2-digit',
       });
+    },
+    openTrack(url: string) {
+      window.open(url, '_blank');
     },
   },
   async mounted() {
@@ -154,6 +165,7 @@ export default defineComponent({
   background-color: #282828;
   border-radius: 8px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
 }
 
 .track-item:hover {
