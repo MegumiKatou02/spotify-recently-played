@@ -6,9 +6,9 @@
     </div>
     <div v-if="tracks.length > 0">
       <div v-for="(track, index) in tracks" :key="index" class="track-item">
-        <img :src="track.albumArt" alt="Album Cover" class="album-art" />
+        <img :src="track.albumArt" alt="Album Cover" class="album-art" @click="openTrack(track.url)" />
         <div class="track-info">
-          <p class="track-name">{{ track.name }}</p>
+          <p class="track-name" @click="openTrack(track.url)">{{ track.name }}</p>
           <p class="track-artist">{{ track.artist }}</p>
         </div>
         <p class="track-time">{{ formatTime(track.playedAt) }}</p>
@@ -29,18 +29,23 @@ interface TrackDisplay {
   artist: string;
   albumArt: string;
   playedAt: string;
+  url: string;
 }
 
 const route = useRoute();
 
 const queryParams = computed(() => ({
   user: route.query.user as string | undefined,
-  width: route.query.width ? Number(route.query.width) : 430,
+  width: route.query.width ? Number(route.query.width) : 490,
   unique: route.query.unique === "true",
   count: route.query.count ? Number(route.query.count) : 7,
 }));
 
 const tracks = ref<TrackDisplay[]>([]);;
+
+const openTrack = (url: string) => {
+  window.open(url, "_blank");
+};
 
 const fetchRecentlyPlayed = async () => {
   try {
@@ -50,6 +55,7 @@ const fetchRecentlyPlayed = async () => {
       artist: item.track.artists.map((artist) => artist.name).join(", "),
       albumArt: item.track.album.images[0]?.url || "",
       playedAt: item.played_at,
+      url: item.track.external_urls.spotify,
     }));
 
     if (queryParams.value.unique) {
@@ -112,6 +118,7 @@ onMounted(fetchRecentlyPlayed);
   width: 50px;
   height: 50px;
   border-radius: 5px;
+  cursor: pointer;
 }
 
 .track-info {
@@ -120,8 +127,13 @@ onMounted(fetchRecentlyPlayed);
 
 .track-name {
   font-weight: bold;
+  cursor: pointer;
+  transition: color 0.15s ease;
 }
 
+.track-name:hover {
+  color: #1db954;
+}
 .track-artist {
   font-size: 0.9em;
   color: #aaa;
