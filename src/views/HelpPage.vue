@@ -64,8 +64,8 @@ const copyToClipboard = async (text: string, index: number) => {
 }
 
 .spotify-logo {
-  width: 64px;
-  height: 64px;
+  width: 48px;
+  height: 48px;
   margin-right: 12px;
   fill: #1DB954;
 }
