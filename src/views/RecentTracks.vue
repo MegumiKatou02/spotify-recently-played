@@ -183,6 +183,12 @@ export default defineComponent({
 
 <style scoped>
 
+@media (hover: hover) {
+  a:hover {
+    background-color: transparent;
+  }
+}
+
 .title {
   display: flex;
   align-items: center;
@@ -376,8 +382,7 @@ background-color: #1E88E5;
   background-color: #1db954;
   color: white;
   font-size: 16px;
-  padding: 10px 10px;
-  /* margin-top: 10px 10px; */
+  padding: 10px 13px;
   border: none;
   border-radius: 20px;
   cursor: pointer;
@@ -386,8 +391,6 @@ background-color: #1E88E5;
   align-items: center;
   justify-content  : center;
   gap: 8px;
-  /* display: block;
-  margin: 10px auto; */
 }
 
 .toggle-button:hover {
