@@ -1,7 +1,14 @@
 <template>
   <div class="help-container">
-    <h1>🎵 Spotify README Generator</h1>
-    <p>Below are links to help you use this feature:</p>
+    <div class="header">
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/8/84/Spotify_icon.svg"
+        alt="Spotify Logo"
+        class="spotify-logo"
+      />
+      <h1>Spotify README Generator (Beta)</h1>
+    </div>
+    <p :style="{marginBottom: `${16}px`}">Below are links to help you use this feature:</p>
 
     <div class="link-list">
       <div v-for="(link, index) in links" :key="index" class="link-item">
@@ -48,6 +55,21 @@ const copyToClipboard = async (text: string, index: number) => {
 </script>
 
 <style scoped>
+
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.spotify-logo {
+  width: 48px;
+  height: 48px;
+  margin-right: 12px;
+  fill: #1DB954;
+}
+
 .help-container {
   max-width: 900px;
   width: 90%;
@@ -61,7 +83,6 @@ const copyToClipboard = async (text: string, index: number) => {
 
 h1 {
   font-size: 26px;
-  margin-bottom: 10px;
   color: #333;
   font-weight: bold;
 }
