@@ -84,4 +84,4 @@ The app will be running at [http://localhost:5173](http://localhost:5173).
 
 ## License
 
-[MIT](LICENSE)
+[Apache-2.0](LICENSE)
