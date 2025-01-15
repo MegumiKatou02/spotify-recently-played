@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory} from 'vue-router';
 import type { RouteRecordRaw } from 'vue-router';
-import LoginButton from '../components/LoginButton.vue';
-import Callback from '../views/Callback.vue';
-import RecentTracks from '../views/RecentTracks.vue';
-import ErrorPage from '../views/ErrorPage.vue';
+import LoginButton from '@/components/LoginButton.vue';
+import Callback from '@/views/Callback.vue';
+import RecentTracks from '@/views/RecentTracks.vue';
+import ErrorPage from '@/views/ErrorPage.vue';
 import RecentlyPlayed from '@/components/RecentlyPlayed.vue';
-import HelpPage from '@/views/HelpPage.vue';
+import GeneratePage from '@/views/GeneratePage.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -35,8 +35,8 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/generate",
-    name: "HelpPage",
-    component: HelpPage,
+    name: "GeneratePage",
+    component: GeneratePage,
   },
   {
     path: '/:catchAll(.*)',
