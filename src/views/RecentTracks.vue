@@ -14,7 +14,7 @@
       <p class="description">Your recently played tracks on Spotify.</p>
     </div>
 
-    <div class="button-footer">
+    <div class="button-header">
       <button
         v-if="!isLoading"
         @click="authorizeSpotify"
@@ -198,7 +198,7 @@ export default defineComponent({
   transform: translateY(12%);
 }
 
-.button-footer {
+.button-header {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
