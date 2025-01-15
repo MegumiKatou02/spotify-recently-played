@@ -98,7 +98,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { SpotifyService } from '../services/SpotifyService';
+import { SpotifyService } from '@/services/SpotifyService';
 
 interface Track {
   track: {
