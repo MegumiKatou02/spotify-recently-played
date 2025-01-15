@@ -1,7 +1,16 @@
 <template>
   <div class="recent-tracks-container">
     <div class="header">
-      <h1 class="title">Recently Played Tracks</h1>
+      <div class="title">
+      <router-link to="/">
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg"
+          alt="Spotify Logo"
+          class="header-logo"
+        />
+      </router-link>
+        <h1 class="title">Recently Played Tracks</h1>
+      </div>
       <p class="description">Your recently played tracks on Spotify.</p>
     </div>
 
@@ -173,6 +182,22 @@ export default defineComponent({
 </script>
 
 <style scoped>
+
+.title {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.header-logo {
+  width: 48px;
+  height: 48px;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  transform: translateY(12%);
+}
+
 .button-footer {
   display: flex;
   flex-wrap: wrap;
