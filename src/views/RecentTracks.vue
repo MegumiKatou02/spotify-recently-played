@@ -80,7 +80,7 @@
       class="toggle-button"
       @click="showAll = !showAll"
     >
-      <span>{{ showAll ? "show less" : "show more" }}</span>
+      <span>{{ showAll ? "Show Less" : "Show More" }}</span>
       <span class="arrow" :class="{ expanded: showAll }">▼</span>
     </button>
     </div>
