@@ -47,14 +47,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue';
+import { defineComponent, ref, watch  } from 'vue';
+import { useRoute } from 'vue-router';
 
 export default defineComponent({
   name: 'LoginButton',
   setup() {
     const isLoading = ref(false);
+    const route = useRoute();
 
-    onMounted(() => {
+    watch(route, () => {
       isLoading.value = false;
     });
 
