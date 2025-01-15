@@ -47,12 +47,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
 
 export default defineComponent({
   name: 'LoginButton',
   setup() {
     const isLoading = ref(false);
+
+    onMounted(() => {
+      isLoading.value = false;
+    });
 
     const authorizeSpotify = () => {
       isLoading.value = true;
