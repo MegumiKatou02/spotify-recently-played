@@ -28,7 +28,8 @@
     <div class="footer">
       <p>
         View source code on
-        <a
+      </p>
+      <a
           href="https://github.com/MegumiKatou02/spotify-recently-played"
           target="_blank"
           rel="noopener noreferrer"
@@ -40,8 +41,7 @@
             class="github-logo"
           />
           GitHub
-        </a>
-      </p>
+      </a>
     </div>
   </div>
 </template>
@@ -143,6 +143,9 @@ export default defineComponent({
 .footer {
   margin-top: 60px;
   color: #b3b3b3;
+  display: flex;
+  column-gap: 8px;
+  align-items: center;
 }
 
 .github-link {
@@ -160,7 +163,7 @@ export default defineComponent({
 .github-logo {
   width: 20px;
   height: 20px;
-  margin-right: 8px;
+  margin-right: 5px;
   filter: brightness(0) invert(1);
 }
 </style>
