@@ -18,7 +18,7 @@
       <button
         v-if="!isLoading"
         @click="authorizeSpotify"
-        :disabled="isLoading"
+        :disabled="isLoading_reauth"
         class="spotify-navigator-button spotify-navigator-button__reauthorize"
       >
         <img
@@ -32,20 +32,18 @@
       <router-link to="/generate">
         <button
           v-if="!isLoading"
-          :disabled="isLoading"
           class="spotify-navigator-button spotify-navigator-button__generate"
         >
-          <span>{{ isLoading_generate ? 'Redirecting...' : 'Generate Readme' }}</span>
+          <span>Generate Readme</span>
         </button>
       </router-link>
 
       <router-link to="/">
         <button
           v-if="!isLoading"
-          :disabled="isLoading"
           class="spotify-navigator-button spotify-navigator-button__home"
         >
-          <span>{{ isLoading_home ? 'Redirecting...' : 'Back to Home' }}</span>
+          <span>Back to Home</span>
         </button>
       </router-link>
     </div>
@@ -123,7 +121,6 @@ export default defineComponent({
   data() {
     return {
       tracks: null as RecentlyPlayedResponse | null,
-      isLoading: true,
       showAll: false,
     };
   },
@@ -143,11 +140,12 @@ export default defineComponent({
     },
   },
   setup() {
+    const isLoading = ref(true); // luc moi vao trang (load)
     const isLoading_reauth = ref(false);
     const isLoading_generate = ref(false);
     const isLoading_home = ref(false);
 
-    const authorizeSpotify = () => {
+    const authorizeSpotify = async () => {
       isLoading_reauth.value = true;
       const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
       const redirectUri = import.meta.env.VITE_SPOTIFY_REDIRECT_URI
@@ -158,6 +156,7 @@ export default defineComponent({
     };
 
     return {
+      isLoading,
       authorizeSpotify,
       isLoading_reauth,
       isLoading_generate,
@@ -175,7 +174,7 @@ export default defineComponent({
     } catch (error) {
       console.error('Error fetching recent tracks:', error);
     } finally {
-      this.isLoading = false;
+      this.isLoading = false; // false sau khi load xong tracks
     }
   },
 });
@@ -341,12 +340,6 @@ export default defineComponent({
   transform: scale(1.05);
 }
 
-.spotify-navigator-button:disabled {
-  background-color: #b3b3b3;
-  cursor: not-allowed;
-  transform: none;
-}
-
 .spotify-logo {
   width: 24px;
   height: 24px;
@@ -355,11 +348,11 @@ export default defineComponent({
 }
 
 .spotify-navigator-button__reauthorize {
-background-color: #1ed760;
+  background-color: #1ed760;
 }
 
 .spotify-navigator-button__reauthorize:hover {
-background-color: #45A049;
+  background-color: #45A049;
 }
 
 .spotify-navigator-button__generate {
@@ -367,7 +360,7 @@ background-color: #45A049;
 }
 
 .spotify-navigator-button__generate:hover {
-background-color: #1E88E5;
+  background-color: #1E88E5;
 }
 
 .spotify-navigator-button__home {
@@ -376,6 +369,12 @@ background-color: #1E88E5;
 
 .spotify-navigator-button__home:hover {
   background-color: #757575;
+}
+
+.spotify-navigator-button:disabled {
+  background-color: #b3b3b3;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .toggle-button {
