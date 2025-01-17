@@ -53,7 +53,7 @@
 import { onMounted, computed, defineComponent  } from 'vue';
 import { useRoute } from 'vue-router';
 import * as constants from '@/utils/Constants';
-import { useSpotify } from '@/composables/useSpotify.ts'
+import { useSpotify } from '@/composables/UseSpotify';
 
 export default defineComponent({
   name: 'RecentlyPlayed',
