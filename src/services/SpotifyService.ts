@@ -1,10 +1,18 @@
 import axios from 'axios';
+import { getAccessToken } from './AuthService';
 
 const spotifyApiBase = 'https://api.spotify.com/v1';
 
 export class SpotifyService {
-  static async getRecentlyPlayed() {
-    const accessToken = localStorage.getItem('spotifyAccessToken');
+  static async getRecentlyPlayed(userId: string | null) {
+    if (!userId) {
+      throw new Error('User ID not found in localStorage.');
+    }
+
+    const accessToken = await getAccessToken(userId);
+    // console.log(accessToken);
+
+    // const accessToken = localStorage.getItem('spotifyAccessToken');
     if (!accessToken) {
       throw new Error('No access token found.');
     }

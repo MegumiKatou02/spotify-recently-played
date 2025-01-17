@@ -4,12 +4,12 @@ import type { TrackItem, TrackDisplay } from '@/types/SpotifyTypes';
 
 
 export function useSpotify() {
-  const userId = ref<string | null>(null);
   const tracks = ref<TrackDisplay[]>([]);
 
-  const fetchRecentlyPlayed = async (unique: boolean, count: number) => {
+  const fetchRecentlyPlayed = async (user: string | undefined, unique: boolean, count: number) => {
     try {
-      const data = await SpotifyService.getRecentlyPlayed();
+      const userId = user ? user : localStorage.getItem('userId');
+      const data = await SpotifyService.getRecentlyPlayed(userId);
       let trackList = data.items.map((item: TrackItem) => ({
         name: item.track.name,
         artist: item.track.artists.map((artist) => artist.name).join(', '),
@@ -33,18 +33,8 @@ export function useSpotify() {
     }
   };
 
-  const fetchUserId = async () => {
-    try {
-      userId.value = await SpotifyService.getUserId();
-    } catch (error) {
-      console.error('Error to fetch', error);
-    }
-  };
-
   return {
-    userId,
     tracks,
     fetchRecentlyPlayed,
-    fetchUserId,
   };
 }
