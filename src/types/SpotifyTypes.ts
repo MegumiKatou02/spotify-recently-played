@@ -25,3 +25,11 @@ export interface Album {
 export interface ExternalUrls {
   spotify: string;
 }
+
+export interface TrackDisplay {
+  name: string;
+  artist: string;
+  albumArt: string;
+  playedAt: string;
+  url: string;
+}

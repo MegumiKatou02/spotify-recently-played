@@ -49,107 +49,73 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+<script lang="ts">
+import { onMounted, computed, defineComponent  } from 'vue';
 import { useRoute } from 'vue-router';
 import * as constants from '@/utils/Constants';
-import { SpotifyService } from '@/services/SpotifyService';
-import type { TrackItem } from '@/types/SpotifyTypes';
+import { useSpotify } from '@/composables/useSpotify.ts'
 
-interface TrackDisplay {
-  name: string;
-  artist: string;
-  albumArt: string;
-  playedAt: string;
-  url: string;
-}
+export default defineComponent({
+  name: 'RecentlyPlayed',
+  setup() {
+    const { userId, tracks, fetchRecentlyPlayed, fetchUserId } = useSpotify();
 
-const route = useRoute();
-
-const queryParams = computed(() => ({
-  user: route.query.user as string | undefined,
-  width: route.query.width ?
-    (Number(route.query.width) > constants.maxWidth || Number(route.query.width) < constants.minWidth ?
-      constants.defaultWidth : Number(route.query.width)) :
-    constants.defaultWidth,
-  unique: route.query.unique === 'true',
-  count: route.query.count ?
-    (Number(route.query.count) > constants.maxCount || Number(route.query.count) < constants.minCount ?
-      constants.defaultCount : Number(route.query.count)) :
-    constants.defaultCount,
-}));
-
-const tracks = ref<TrackDisplay[]>([]);
-
-const openTrack = (url: string) => {
-  window.location.href = url;
-};
-
-const redirectToUrl =(url: string) => {
-  openTrack(url);
-}
-
-const fetchUserId = async () => {
-  try {
-    const userId: string | null = await SpotifyService.getUserId();
-    return userId;
-  }
-  catch (error) {
-    console.error('Error to fetch', error);
-    return null;
-  }
-}
-
-const fetchRecentlyPlayed = async () => {
-  try {
-    const data = await SpotifyService.getRecentlyPlayed();
-    let trackList = data.items.map((item: TrackItem) => ({
-      name: item.track.name,
-      artist: item.track.artists.map((artist) => artist.name).join(', '),
-      albumArt: item.track.album.images[0]?.url || '',
-      playedAt: item.played_at,
-      url: item.track.external_urls.spotify,
+    const route = useRoute();
+    const queryParams = computed(() => ({
+      user: route.query.user as string | undefined,
+      width: route.query.width ?
+        (Number(route.query.width) > constants.maxWidth || Number(route.query.width) < constants.minWidth ?
+          constants.defaultWidth : Number(route.query.width)) :
+        constants.defaultWidth,
+      unique: route.query.unique === 'true',
+      count: route.query.count ?
+        (Number(route.query.count) > constants.maxCount || Number(route.query.count) < constants.minCount ?
+          constants.defaultCount : Number(route.query.count)) :
+        constants.defaultCount,
     }));
 
-    if (queryParams.value.unique) {
-      const seen = new Set();
-      trackList = trackList.filter((track: TrackDisplay) => {
-        if (seen.has(track.name)) return false;
-        seen.add(track.name);
-        return true;
-      });
+    const openTrack = (url: string) => {
+      window.location.href = url;
+    };
+
+    const redirectToUrl = (url: string) => {
+      openTrack(url);
     }
 
-    tracks.value = trackList.slice(0, queryParams.value.count);
-  } catch (error) {
-    console.error('Failed to fetch recently played songs:', error);
-  }
-};
+    const formatTime = (isoTime: string) => {
+      const date = new Date(isoTime);
+      const diffInSeconds = Math.round(Math.abs((date.getTime() - new Date().getTime()) / 1000));
 
-const formatTime = (isoTime: string) => {
-  const date = new Date(isoTime);
-  const diffInSeconds = Math.round(Math.abs((date.getTime() - new Date().getTime()) / 1000));
+      if (diffInSeconds < 60) {
+        return `${diffInSeconds} seconds ago`;
+      } else if (diffInSeconds < 3600) {
+        const minutes = Math.floor(diffInSeconds / 60);
+        return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
+      } else if (diffInSeconds < 86400) {
+        const hours = Math.floor(diffInSeconds / 3600);
+        return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
+      } else {
+        const days = Math.floor(diffInSeconds / 86400);
+        return `${days} day${days !== 1 ? 's' : ''} ago`;
+      }
+    };
 
-  if (diffInSeconds < 60) {
-    return `${diffInSeconds} seconds ago`;
-  } else if (diffInSeconds < 3600) {
-    const minutes = Math.floor(diffInSeconds / 60);
-    return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
-  } else if (diffInSeconds < 86400) {
-    const hours = Math.floor(diffInSeconds / 3600);
-    return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
-  } else {
-    const days = Math.floor(diffInSeconds / 86400);
-    return `${days} day${days !== 1 ? 's' : ''} ago`;
-  }
-};
+    onMounted(async () => {
+      await fetchRecentlyPlayed(queryParams.value.unique, queryParams.value.count);
+      await fetchUserId();
+    });
 
-const userId = ref<string | null>();
-
-onMounted(async () => {
-  await fetchRecentlyPlayed();
-  userId.value = await fetchUserId();
+    return {
+      userId,
+      tracks,
+      queryParams,
+      openTrack,
+      redirectToUrl,
+      formatTime,
+    }
+  },
 });
+
 </script>
 
 <style scoped>
