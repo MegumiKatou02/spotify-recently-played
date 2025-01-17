@@ -29,29 +29,38 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref } from "vue";
+<script lang="ts">
+import { ref, defineComponent } from "vue";
 
-const links = ref([
-  { name: "Markdown code snippet", url: "https://spotify-recently-tracks.vercel.app/api?user={user_id}" },
-  { name: "For custom count (1 ≤ {count} ≤ 15)", url: "https://spotify-recently-tracks.vercel.app/api?count={count}" },
-  { name: "For custom width (490 ≤ {width} ≤ 1000)", url: "https://spotify-recently-tracks.vercel.app/api?width={width}" },
-  { name: "For unique tracks", url: "https://spotify-recently-tracks.vercel.app/api?unique={true|false}" }
-]);
-
-const copiedIndex = ref<number | null>(null);
-
-const copyToClipboard = async (text: string, index: number) => {
-  try {
-    await navigator.clipboard.writeText(text);
-    copiedIndex.value = index;
-    setTimeout(() => {
-      copiedIndex.value = null;
-    }, 2000);
-  } catch (err) {
-    console.error("Copy failed:", err);
+export default defineComponent({
+  setup() {
+    const userId = localStorage.getItem('userId') ? localStorage.getItem('userId') : '{user_id}';
+    const links = ref([
+      { name: "Markdown code snippet", url: `https://spotify-recently-tracks.vercel.app/api?user=${userId}` },
+      { name: "For custom count (1 ≤ {count} ≤ 15)", url: "https://spotify-recently-tracks.vercel.app/api?count={count}" },
+      { name: "For custom width (490 ≤ {width} ≤ 1000)", url: "https://spotify-recently-tracks.vercel.app/api?width={width}" },
+      { name: "For unique tracks", url: "https://spotify-recently-tracks.vercel.app/api?unique={true|false}" }
+    ]);
+    const copiedIndex = ref<number | null>(null);
+    const copyToClipboard = async (text: string, index: number) => {
+      try {
+        await navigator.clipboard.writeText(text);
+        copiedIndex.value = index;
+        setTimeout(() => {
+          copiedIndex.value = null;
+        }, 2000);
+      } catch (err) {
+        console.error("Copy failed:", err);
+      }
+    };
+    return {
+      links,
+      copiedIndex,
+      copyToClipboard,
+    };
   }
-};
+});
+
 </script>
 
 <style scoped>
