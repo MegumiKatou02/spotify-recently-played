@@ -1,13 +1,15 @@
 <template>
   <div class="recently-played" :style="{ width: `${queryParams.width || 400}px` }">
     <div class="header">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 168 168" class="spotify-logo">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 168 168" class="spotify-logo"
+      @click="redirectToUrl(userId ? `https://open.spotify.com/user/${userId}` : `https://open.spotify.com`)">
         <path
           fill="#1DB954"
           d="M83.996 0C37.747 0 0 37.747 0 84c0 46.251 37.747 83.996 83.996 83.996C130.249 167.996 168 130.249 168 84 168 37.747 130.249 0 83.996 0zm38.326 120.878c-1.497 2.451-4.687 3.212-7.139 1.715-19.598-11.991-44.296-14.707-73.326-8.067-2.809.644-5.609-1.117-6.249-3.925-.643-2.809 1.117-5.609 3.926-6.249 31.901-7.288 59.263-4.15 81.337 9.387 2.452 1.497 3.213 4.688 1.715 7.139zm10.235-22.802c-1.893 3.073-5.912 4.037-8.981 2.144-22.505-13.84-56.822-17.843-83.447-9.761-3.453 1.043-7.1-.903-8.148-4.352-1.044-3.453.907-7.093 4.359-8.139 30.485-9.238 68.341-4.758 94.056 11.127 3.07 1.89 4.034 5.91 2.143 8.981zm.875-23.744c-26.994-16.031-71.52-17.505-97.289-9.684-4.138 1.255-8.514-1.081-9.768-5.219-1.254-4.14 1.08-8.513 5.221-9.771 29.581-8.98 78.756-7.245 109.83 11.202 3.722 2.209 4.943 7.016 2.737 10.733-2.2 3.722-7.02 4.949-10.731 2.739z"
         />
       </svg>
-      <span>Recently Played</span>
+      <p id="spotify-header" @click="redirectToUrl(userId ? `https://open.spotify.com/user/${userId}` : `https://open.spotify.com`)" >Spotify</p>
+      <p>Recently Played</p>
     </div>
 
     <div v-if="tracks.length > 0" class="tracks-container">
@@ -80,8 +82,23 @@ const queryParams = computed(() => ({
 const tracks = ref<TrackDisplay[]>([]);
 
 const openTrack = (url: string) => {
-  window.open(url, '_blank');
+  window.location.href = url;
 };
+
+const redirectToUrl =(url: string) => {
+  openTrack(url);
+}
+
+const fetchUserId = async () => {
+  try {
+    const userId: string | null = await SpotifyService.getUserId();
+    return userId;
+  }
+  catch (error) {
+    console.error('Error to fetch', error);
+    return null;
+  }
+}
 
 const fetchRecentlyPlayed = async () => {
   try {
@@ -126,10 +143,23 @@ const formatTime = (isoTime: string) => {
     return `${days} day${days !== 1 ? 's' : ''} ago`;
   }
 };
-onMounted(fetchRecentlyPlayed);
+
+const userId = ref<string | null>();
+
+onMounted(async () => {
+  await fetchRecentlyPlayed();
+  userId.value = await fetchUserId();
+});
 </script>
 
 <style scoped>
+#spotify-header {
+  color: #1db954;
+  font-weight: bold;
+  font-size: larger;
+  margin-right: 10px;
+}
+
 .recently-played {
   background: #181818;
   color: white;
@@ -141,15 +171,19 @@ onMounted(fetchRecentlyPlayed);
 .header {
   display: flex;
   align-items: center;
-  gap: 0.625rem;
+  gap: 0.5rem;
   font-size: 1.2em;
   font-weight: bold;
   margin-bottom: 1rem;
 }
 
 .spotify-logo {
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 2rem;
+  height: 2rem;
+}
+
+.spotify-logo, #spotify-header {
+  cursor: pointer;
 }
 
 .tracks-container {

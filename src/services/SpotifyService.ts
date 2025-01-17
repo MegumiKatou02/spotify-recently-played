@@ -21,7 +21,7 @@ export class SpotifyService {
       throw error;
     }
   }
-  static async getUserId() {
+  static async getUserId(): Promise<string | null> {
     const accessToken = localStorage.getItem("spotifyAccessToken");
     if (!accessToken) {
       throw new Error("No access token found.");
