@@ -50,7 +50,7 @@
 </template>
 
 <script lang="ts">
-import { onMounted, computed, defineComponent  } from 'vue';
+import { onMounted, computed, defineComponent, ref  } from 'vue';
 import { useRoute } from 'vue-router';
 import * as constants from '@/utils/Constants';
 import { useSpotify } from '@/composables/UseSpotify';
@@ -58,7 +58,7 @@ import { useSpotify } from '@/composables/UseSpotify';
 export default defineComponent({
   name: 'RecentlyPlayed',
   setup() {
-    const { userId, tracks, fetchRecentlyPlayed, fetchUserId } = useSpotify();
+    const { tracks, fetchRecentlyPlayed } = useSpotify();
 
     const route = useRoute();
     const queryParams = computed(() => ({
@@ -73,6 +73,8 @@ export default defineComponent({
           constants.defaultCount : Number(route.query.count)) :
         constants.defaultCount,
     }));
+
+    const userId = ref<string | undefined>(queryParams.value.user);
 
     const openTrack = (url: string) => {
       window.location.href = url;
@@ -101,8 +103,7 @@ export default defineComponent({
     };
 
     onMounted(async () => {
-      await fetchRecentlyPlayed(queryParams.value.unique, queryParams.value.count);
-      await fetchUserId();
+      await fetchRecentlyPlayed(queryParams.value.user, queryParams.value.unique, queryParams.value.count);
     });
 
     return {

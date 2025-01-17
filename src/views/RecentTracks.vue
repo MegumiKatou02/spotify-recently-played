@@ -165,7 +165,9 @@ export default defineComponent({
   },
   async mounted() {
     try {
-      const response = await SpotifyService.getRecentlyPlayed();
+      const userId = localStorage.getItem('userId');
+      // console.log(userId);
+      const response = await SpotifyService.getRecentlyPlayed(userId);
       if (response) {
         this.tracks = response;
       } else {

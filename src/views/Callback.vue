@@ -8,12 +8,15 @@
 import { defineComponent, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
+import { db } from '@/config/Firebase';
+import { collection, doc, setDoc } from 'firebase/firestore';
 
 export default defineComponent({
   name: 'CallBack',
   setup() {
     const route = useRoute();
     const router = useRouter();
+    const spotifyApiBase = 'https://api.spotify.com/v1'
 
     onMounted(async () => {
       const code = route.query.code as string;
@@ -41,11 +44,32 @@ export default defineComponent({
         const response = await axios.post(tokenEndpoint, formData);
         const accessToken = response.data.access_token;
 
-        localStorage.setItem('spotifyAccessToken', accessToken);
+        // console.log(accessToken);
+
+        const headers = {
+          Authorization: `Bearer ${accessToken}`,
+        };
+
+        const resUser = await axios.get(`${spotifyApiBase}/me`, { headers });
+        // console.log(resUser.data.id);
+
+
+        const expiresIn = response.data.expires_in;
+        const refreshToken = response.data.refresh_token;
+
+        const userId = resUser.data.id;
+        await setDoc(doc(collection(db, 'spotifyTokens'), userId), {
+          accessToken,
+          refreshToken,
+          expiresAt: Date.now() + expiresIn * 1000,
+        });
+        localStorage.setItem('userId', userId);
+
+        // localStorage.setItem('spotifyAccessToken', accessToken);
         router.push('/recently');
       } catch (error) {
         console.error('Error obtaining access token:', error);
-        localStorage.removeItem('spotifyAccessToken');
+        // localStorage.removeItem('spotifyAccessToken');
         router.push('/error');
       }
     });
