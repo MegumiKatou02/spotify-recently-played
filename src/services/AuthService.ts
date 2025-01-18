@@ -8,6 +8,21 @@ const clientSecret = import.meta.env.VITE_SPOTIFY_CLIENT_SECRET;
 const redirectUri = import.meta.env.VITE_SPOTIFY_REDIRECT_URI;
 
 /**
+ * @param id query param ?user
+ * @returns Promise<boolean>: return `true` if document exists else `false`
+ */
+export async function isDocExist(id: string): Promise<boolean> {
+  try {
+    const userDocRef = doc(collection(db, 'spotifyTokens'), id);
+    const userDoc = await getDoc(userDocRef);
+    return userDoc.exists();
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
+/**
  * @param userId
  * @returns
  */
