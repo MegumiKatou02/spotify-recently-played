@@ -45,15 +45,17 @@
         <span class="track-time">{{ formatTime(track.playedAt) }}</span>
       </div>
     </div>
-    <p v-else class="loading">Loading...</p>
+    <p v-else-if="isCheckingUser" class="loading">Loading...</p>
+    <p v-else-if="!isUserExist" class="loading">User ID not found. Please try again</p>
   </div>
 </template>
 
 <script lang="ts">
-import { onMounted, computed, defineComponent, ref  } from 'vue';
+import { onMounted, computed, defineComponent, ref, onBeforeMount } from 'vue';
 import { useRoute } from 'vue-router';
 import * as constants from '@/utils/Constants';
 import { useSpotify } from '@/composables/UseSpotify';
+import { isDocExist } from '@/services/AuthService';
 
 export default defineComponent({
   name: 'RecentlyPlayed',
@@ -75,9 +77,11 @@ export default defineComponent({
     }));
 
     const userId = ref<string | undefined>(queryParams.value.user);
+    const isUserExist = ref<boolean>(false);
+    const isCheckingUser = ref<boolean>();
 
     const openTrack = (url: string) => {
-      window.location.href = url;
+      window.open(url, '_blank');
     };
 
     const redirectToUrl = (url: string) => {
@@ -102,6 +106,14 @@ export default defineComponent({
       }
     };
 
+    onBeforeMount(async () => {
+    if (userId.value) {
+      isCheckingUser.value = true;
+      isUserExist.value = await isDocExist(userId.value);
+      isCheckingUser.value = false;
+    }
+  });
+
     onMounted(async () => {
       await fetchRecentlyPlayed(queryParams.value.user, queryParams.value.unique, queryParams.value.count);
     });
@@ -113,6 +125,8 @@ export default defineComponent({
       openTrack,
       redirectToUrl,
       formatTime,
+      isUserExist,
+      isCheckingUser,
     }
   },
 });
