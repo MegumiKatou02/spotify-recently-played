@@ -49,7 +49,6 @@ Deploy your own Vercel instance using the link above. Next, set the following en
 | `VITE_FIREBASE_MESSAGING_SENDER_ID`    | Sender ID for Firebase Cloud Messaging|
 | `VITE_FIREBASE_APP_ID`               |Firebase App ID|
 |`VITE_FIREBASE_MEASUREMENT_ID`|Measurement ID for Firebase Analytics (if applicable)
-|
 
 ## Running locally
 
