@@ -100,6 +100,11 @@ export default defineComponent({
   height: 64px;
   margin-bottom: 16px;
   filter: brightness(0) invert(1);
+
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 .title {
