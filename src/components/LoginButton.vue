@@ -5,6 +5,7 @@
         src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg"
         alt="Spotify Logo"
         class="header-logo"
+        @click="redirectToUrl('https://open.spotify.com')"
       />
       <h1 class="title">Spotify Recently Played</h1>
       <p class="description">
@@ -60,6 +61,10 @@ export default defineComponent({
       isLoading.value = false;
     });
 
+    const redirectToUrl = (url: string) => {
+      window.open(url, '_blank');
+    }
+
     const authorizeSpotify = () => {
       isLoading.value = true;
       const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
@@ -71,6 +76,7 @@ export default defineComponent({
     };
 
     return {
+      redirectToUrl,
       authorizeSpotify,
       isLoading,
     };
@@ -105,6 +111,10 @@ export default defineComponent({
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
+}
+
+.header-logo:hover {
+  cursor: pointer;
 }
 
 .title {
