@@ -203,6 +203,11 @@ export default defineComponent({
   padding: 0;
   cursor: pointer;
   transform: translateY(12%);
+
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 .button-header {
