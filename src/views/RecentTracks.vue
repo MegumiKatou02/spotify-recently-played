@@ -97,23 +97,10 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { SpotifyService } from '@/services/SpotifyService';
-
-interface Track {
-  track: {
-    name: string;
-    artists: Array<{ name: string }>;
-    album: {
-      images: Array<{ url: string }>;
-    };
-    external_urls: {
-      spotify: string;
-    };
-  };
-  played_at: string;
-}
+import type { TrackItem } from '@/types/SpotifyTypes';
 
 interface RecentlyPlayedResponse {
-  items: Track[];
+  items: TrackItem[];
 }
 
 export default defineComponent({

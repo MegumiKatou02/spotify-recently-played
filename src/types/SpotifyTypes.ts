@@ -19,7 +19,7 @@ export interface Artist {
 }
 
 export interface Album {
-  images: { url: string }[];
+  images: Array<{ url: string }>;
 }
 
 export interface ExternalUrls {
