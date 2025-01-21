@@ -45,15 +45,11 @@ export default defineComponent({
         const response = await axios.post(tokenEndpoint, formData);
         const accessToken = response.data.access_token;
 
-        // console.log(accessToken);
-
         const headers = {
           Authorization: `Bearer ${accessToken}`,
         };
 
         const resUser = await axios.get(`${spotifyApiBase}/me`, { headers });
-        // console.log(resUser.data.id);
-
 
         const expiresIn = response.data.expires_in;
         const refreshToken = response.data.refresh_token;
@@ -66,11 +62,9 @@ export default defineComponent({
         });
         localStorage.setItem('userId', userId);
 
-        // localStorage.setItem('spotifyAccessToken', accessToken);
         router.push('/recently');
       } catch (error) {
         console.error('Error obtaining access token:', error);
-        // localStorage.removeItem('spotifyAccessToken');
         router.push('/error');
       }
     });
@@ -107,5 +101,4 @@ export default defineComponent({
     transform: rotate(360deg);
   }
 }
-
 </style>
