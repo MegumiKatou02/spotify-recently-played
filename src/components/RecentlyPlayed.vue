@@ -9,7 +9,9 @@
         />
       </svg>
       <p id="spotify-header" @click="redirectToUrl(userId ? `https://open.spotify.com/user/${userId}` : `https://open.spotify.com`)" >Spotify</p>
-      <p>Recently Played</p>
+      <router-link to="/recently">
+        <p>Recently Played</p>
+      </router-link>
     </div>
 
     <div v-if="tracks.length > 0" class="tracks-container">
@@ -156,6 +158,14 @@ export default defineComponent({
   font-size: 1.2em;
   font-weight: bold;
   margin-bottom: 1rem;
+}
+
+.header a {
+  color: white;
+}
+
+.header a:hover {
+  background-color: transparent;
 }
 
 .spotify-logo {

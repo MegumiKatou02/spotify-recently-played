@@ -25,7 +25,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/error',
-    name: 'Error',
+    name: 'ErrorPage',
     component: ErrorPage,
   },
   {
