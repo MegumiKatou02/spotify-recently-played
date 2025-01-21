@@ -33,6 +33,7 @@
 import { ref, defineComponent } from "vue";
 
 export default defineComponent({
+  name: "GeneratePage",
   setup() {
     const userId = localStorage.getItem('userId') ? localStorage.getItem('userId') : '{user_id}';
     const links = ref([
